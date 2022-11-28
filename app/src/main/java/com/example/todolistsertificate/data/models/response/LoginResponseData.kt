@@ -6,7 +6,7 @@ data class LoginResponseData(
     @SerializedName("success")
     val success: Boolean,
     @SerializedName("code")
-    val code: String,
+    val code: Int,
     @SerializedName("message")
     val message: String,
     @SerializedName("payload")

@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder().baseUrl("BUILD URL").client(okHttpClient)
+    return Retrofit.Builder().baseUrl("https://todo.salawat.me").client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create()).build()
 }
 
