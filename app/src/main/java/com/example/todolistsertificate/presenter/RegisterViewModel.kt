@@ -10,15 +10,21 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class RegisterViewModel(private val mainRepository: MainRepository): ViewModel() {
+class RegisterViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
     private val _registerSuccessFlow = MutableSharedFlow<String>()
     val registerSuccessFlow: Flow<String> get() = _registerSuccessFlow
 
+    val loaderFlow = MutableSharedFlow<Boolean>()
+
     fun register(name: String, phone: String, password: String) {
         mainRepository.register(RegisterData(phone, name, password)).onEach {
-            if(it is ResultData.Success){
-                _registerSuccessFlow.emit(it.data.payload.token)}
+            loaderFlow.emit(true)
+            if (it is ResultData.Success) {
+                _registerSuccessFlow.emit(it.data.payload.token)
+            }
+
+            loaderFlow.emit(false)
         }.launchIn(viewModelScope)
     }
 

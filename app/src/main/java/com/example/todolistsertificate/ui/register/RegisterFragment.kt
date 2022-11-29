@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.todolistsertificate.R
+import com.example.todolistsertificate.data.local.LocalStorage
 import com.example.todolistsertificate.databinding.FragmentRegisterBinding
 import com.example.todolistsertificate.presenter.RegisterViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -33,19 +34,19 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 val password = etPassword.text.toString()
 
                 viewModel.register(phone, name, password)
-
             }
         }
     }
 
-    private fun initObservers(){
+    private fun initObservers() {
         viewModel.registerSuccessFlow.onEach {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            LocalStorage.pref.edit().putString("token", it).apply()
+        }.launchIn(lifecycleScope)
+
+
+        viewModel.loaderFlow.onEach {
+            binding.progressBar.isVisible = it
         }.launchIn(lifecycleScope)
     }
-
-    private fun setLoading(loading: Boolean){
-        binding.progressBar.isVisible = loading
-    }
-
 }

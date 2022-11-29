@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/listFragment"
-        android:name="com.example.todolist.ui.list.HomeFragment"
+        android:name="com.example.todolistsertificate.ui.home.HomeFragment"
         android:label="fragment_add_list"
         tools:layout="@layout/fragment_add_list" >
         <action

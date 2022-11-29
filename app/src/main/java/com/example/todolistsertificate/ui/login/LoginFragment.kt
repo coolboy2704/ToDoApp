@@ -12,12 +12,11 @@ import androidx.navigation.fragment.findNavController
 import com.example.todolistsertificate.R
 import com.example.todolistsertificate.databinding.FragmentLoginBinding
 import com.example.todolistsertificate.presenter.LoginViewModel
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LoginFragment: Fragment(R.layout.fragment_login)  {
+class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var binding: FragmentLoginBinding
     private lateinit var navController: NavController
     private val viewModel by viewModel<LoginViewModel>()
@@ -31,7 +30,7 @@ class LoginFragment: Fragment(R.layout.fragment_login)  {
         binding.apply {
 
             binding.bnRegister.setOnClickListener {
-                findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+                findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
             }
 
             bnLogin.setOnClickListener {
@@ -39,30 +38,31 @@ class LoginFragment: Fragment(R.layout.fragment_login)  {
                 val password = etPassword.text.toString()
 
                 viewModel.login(number, password)
-
-
             }
 
         }
 
     }
 
-    private fun initObservers(){
+    private fun initObservers() {
         viewModel.loginSuccessFlow.onEach {
-            if (it == 200){
+            if (it == 200) {
                 navController.navigate(R.id.action_loginFragment_to_listFragment)
-            } else {
-                Snackbar.make(requireView(), "parol yaki login qate", Snackbar.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "CORRECT", Toast.LENGTH_SHORT).show()
             }
         }.launchIn(lifecycleScope)
 
         viewModel.errorFlow.onEach {
             Toast.makeText(requireContext(), "Error keldi", Toast.LENGTH_SHORT).show()
         }.launchIn(lifecycleScope)
-    }
 
-    private fun setLoading(loading: Boolean){
-        binding.progressBar.isVisible = loading
-    }
 
+        viewModel.messageFlow.onEach {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+        }.launchIn(lifecycleScope)
+
+        viewModel.loaderFlow.onEach {
+            binding.progressBar.isVisible = it
+        }.launchIn(lifecycleScope)
+    }
 }

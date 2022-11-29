@@ -10,31 +10,32 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class LoginViewModel(private val mainRepository: MainRepository): ViewModel() {
+class LoginViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
     private val _loginSuccessFlow = MutableSharedFlow<Int>()
     val loginSuccessFlow: Flow<Int> get() = _loginSuccessFlow
 
     fun login(phone: String, password: String) {
-        mainRepository.login(LoginData(phone,password)).onEach {
+        mainRepository.login(LoginData(phone, password)).onEach {
+            loaderFlow.emit(true)
             when (it) {
                 is ResultData.Success -> {
                     _loginSuccessFlow.emit(it.data.code)
                 }
                 is ResultData.Message -> {
-//                    Timber.d("message")
-//                    .emit(it.message)
+                    messageFlow.emit(it.message)
                 }
                 is ResultData.Error -> {
                     errorFlow.emit(it.error)
                 }
             }
+            loaderFlow.emit(false)
         }.launchIn(viewModelScope)
     }
 
-     val errorFlow = MutableSharedFlow<Throwable>()
-     val loaderFlow = MutableSharedFlow<Boolean>()
-
+    val errorFlow = MutableSharedFlow<Throwable>()
+    val loaderFlow = MutableSharedFlow<Boolean>()
+    val messageFlow = MutableSharedFlow<String>()
 
 
 }
