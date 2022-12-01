@@ -2,6 +2,7 @@ package com.example.todolistsertificate.ui.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -23,19 +24,16 @@ class HomeFragment : Fragment(R.layout.fragment_add_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddListBinding.bind(view)
-        binding.rvList.adapter = adapter
-//        initRec()
+//        binding.rvList.adapter = adapter
+        initRec()
+        val recyclerView = binding.rvList
         initObservers()
-
-        binding.apply {
-            viewModel.getAllTodo()
-        }
+        viewModel.getAllTodo(adapter, recyclerView)
 
 //        adapter.setOnMenuItemCLickListener {
 //            findNavController().navigate(HomeFragmentDirections.actionListFragmentToUpdateFragment())
 //            Toast.makeText(requireContext(), "otti", Toast.LENGTH_SHORT).show()
 //        }
-
     }
 
     private fun initRec() {
@@ -54,5 +52,10 @@ class HomeFragment : Fragment(R.layout.fragment_add_list) {
         viewModel.successFlow.onEach {
             adapter.model = it.payload.toMutableList()
         }.launchIn(lifecycleScope)
+
+        viewModel.loaderFlow.onEach {
+            binding.progressBar.isVisible = it
+        }.launchIn(lifecycleScope)
+
     }
 }

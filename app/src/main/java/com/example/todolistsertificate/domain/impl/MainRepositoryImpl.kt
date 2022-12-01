@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
-class MainRepositoryImpl(val api: TodoApi, val localStorage: LocalStorage) : MainRepository {
+class MainRepositoryImpl(val api: TodoApi) : MainRepository {
     override fun register(user: RegisterData) = flow<ResultData<LoginResponseData>>{
         val response = api.registerUser(user)
         if (response.isSuccessful){
@@ -52,7 +52,7 @@ class MainRepositoryImpl(val api: TodoApi, val localStorage: LocalStorage) : Mai
 
 
     override fun getAllTodo() = flow {
-        val response = api.getAllTodo(localStorage.token)
+        val response = api.getAllTodo()
         if (response.isSuccessful){
             emit(ResultData.Success(response.body()!!))
         } else {

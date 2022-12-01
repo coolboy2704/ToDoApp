@@ -30,6 +30,6 @@ interface TodoApi {
 
     @GET("/api/tasks")
     suspend fun getAllTodo(
-        @Header("Authorization") token: String,
+//        @Header("Authorization") token: String,
     ): Response<AllTaskResponseData>
 }

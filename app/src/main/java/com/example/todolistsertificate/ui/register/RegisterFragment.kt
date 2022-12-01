@@ -42,8 +42,8 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         viewModel.registerSuccessFlow.onEach {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             LocalStorage.pref.edit().putString("token", it).apply()
+            findNavController().navigate(R.id.action_registerFragment_to_listFragment)
         }.launchIn(lifecycleScope)
-
 
         viewModel.loaderFlow.onEach {
             binding.progressBar.isVisible = it

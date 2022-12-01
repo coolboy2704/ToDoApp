@@ -20,7 +20,7 @@ val viewModelModule = module{
 }
 
 val repositoryModule = module{
-    single<MainRepository> {MainRepositoryImpl(get(), get())}
+    single<MainRepository> {MainRepositoryImpl(get())}
 }
 
 val networkModule = module {
